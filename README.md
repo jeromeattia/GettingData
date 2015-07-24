@@ -4,4 +4,6 @@ The creation of a directory "GettingData" in your HOME folder is optional (and c
 
 The only required package is **dplyr**, to be installed before running the script.
 
-The file **CodeBook.md** explain the transformations made to the data to obtain the tidy dataset in the end, named **tidy_data** and exported as **tidy_data.txt**.
+The file **CodeBook.md** explain the transformations made to the data to obtain eventually the tidy dataset, named **tidy_data** and exported as **tidy_data.txt**.
+
+R version: i386 (32 bits) 3.2.1
