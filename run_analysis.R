@@ -118,10 +118,10 @@ tidy_data <- summarize(
   fBodyBodyGyroJerkMag.std  =  mean(fBodyBodyGyroJerkMag.std)
   )
 #final touch, removing dots and uppercase to be truly tidy!
-colNames <- colnames(data3)
+colNames <- colnames(tidy_data)
 colNames <- gsub("\\.",'',colNames)
 colNames <- tolower(colNames)
-colnames(data3)  <- colNames
+colnames(tidy_data)  <- colNames
 
 write.table(tidy_data,"tidy_data.txt", row.names= FALSE)
 
