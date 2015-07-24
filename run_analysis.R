@@ -1,17 +1,18 @@
 library('dplyr')
 
-#creation of a working directory
-str <- paste('C:',Sys.getenv('HOMEPATH'))
-str <- gsub(" ", "", str)
-setwd(str)
-if (!file.exists("GettingData")) {
-  dir.create("GettingData")
-}
-str <- paste('C:',Sys.getenv('HOMEPATH'),"\\GettingData")
-str <- gsub(" ", "", str)
-setwd(str)
-#download and unziping commented out 
-#the donwloaded directory (UCI HAR Dataset) should be in the working directory(%HOME%\GettingData in windows) fixed above or elsewhere but you should modify the working directory accordingly.
+##optional creation of a working directory and downloading
+# str <- paste('C:',Sys.getenv('HOMEPATH'))
+# str <- gsub(" ", "", str)
+# setwd(str)
+# if (!file.exists("GettingData")) {
+#   dir.create("GettingData")
+# }
+# str <- paste('C:',Sys.getenv('HOMEPATH'),"\\GettingData")
+# str <- gsub(" ", "", str)
+# setwd(str)
+##download
+##the donwloaded directory (UCI HAR Dataset) should be in the working directory(%HOME%\GettingData in windows)
+#fixed above or elsewhere but you should then change the working directory accordingly.
 # fileURL <- 'https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip'
 # download.file(fileURL, destfile = './data/Dataset.zip', method = 'curl', extra ='--insecure')
 # dateDownloaded <- date()
@@ -29,7 +30,7 @@ train.data      <- cbind(subject.train, activity.train.y, train.x)
 #now join train and test data
 data            <- rbind(test.data,train.data)
 #use the features table to get the column names
-features        <-  read.table("UCI HAR Dataset\\features.txt") 
+features        <-  read.table("UCI HAR Dataset\\features.txt")
 colnamesData    <- c("subject","activity",gsub('-','.',as.character(features$V2)))
 ##parenthesis are not doing well with R, so remove them
 colnamesData    <- gsub('\\(\\)','', colnamesData)
@@ -46,9 +47,9 @@ data1[,2] <- gsub(3 , "WALKING_DOWNSTAIRS",data1[,2])
 data1[,2] <- gsub(4 , "SITTING", data1[,2])
 data1[,2] <- gsub(5 , "STANDING",data1[,2])
 data1[,2] <- gsub(6 , "LAYING", data1[,2])
-#the dplyr part 
+#the dplyr part
 data2 <- group_by(data1, subject, activity)
-data3 <- summarize(
+tidy_data <- summarize(
   data2,tBodyAcc.X    = mean(tBodyAcc.mean.X) ,
   tBodyAcc.mean.Y     = mean(tBodyAcc.mean.Y),
   tBodyAcc.mean.Z     = mean(tBodyAcc.mean.Z),
@@ -116,5 +117,11 @@ data3 <- summarize(
   fBodyBodyGyroJerkMag.mean =  mean(fBodyBodyGyroJerkMag.mean),
   fBodyBodyGyroJerkMag.std  =  mean(fBodyBodyGyroJerkMag.std)
   )
-  #final touch
-write.table(data3,"tidy_data.txt", row.names= FALSE)
+#final touch, removing dots and uppercase to be truly tidy!
+colNames <- colnames(data3)
+colNames <- gsub("\\.",'',colNames)
+colNames <- tolower(colNames)
+colnames(data3)  <- colNames
+
+write.table(tidy_data,"tidy_data.txt", row.names= FALSE)
+
